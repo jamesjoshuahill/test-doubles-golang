@@ -14,16 +14,17 @@ import (
 	. "github.com/petergtz/pegomock"
 )
 
-var _ = Describe("FirstByName", func() {
+var _ = Describe("CategoryService#First", func() {
 	Context("with a hand-rolled fake logger", func() {
 		It("calls the repository with the category", func() {
 			repo := new(handrolled.FakeRepository)
 			service := doubles.NewCategoryService(repo)
 
-			service.First("category")
+			service.First("name")
 
 			Expect(repo.QueryMock.CallCount).To(Equal(1))
-			Expect(repo.QueryMock.Received.Category).To(Equal("category"))
+			Expect(repo.QueryMock.Received.Name).To(Equal("name"))
+			Expect(repo.QueryMock.Received.Kind).To(Equal("category"))
 		})
 
 		Context("when no records are found", func() {
@@ -31,9 +32,9 @@ var _ = Describe("FirstByName", func() {
 				repo := new(handrolled.FakeRepository)
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`no records found in category "category"`))
+				Expect(err).To(MatchError(`no categories found with name "name"`))
 			})
 		})
 
@@ -41,14 +42,14 @@ var _ = Describe("FirstByName", func() {
 			It("returns the matching record", func() {
 				repo := new(handrolled.FakeRepository)
 				repo.QueryMock.Returns.Records = []doubles.Record{
-					{Category: "category"},
+					{Category: "name"},
 				}
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
@@ -56,16 +57,16 @@ var _ = Describe("FirstByName", func() {
 			It("returns the first matching record", func() {
 				repo := new(handrolled.FakeRepository)
 				repo.QueryMock.Returns.Records = []doubles.Record{
-					{Category: "category"},
-					{Category: "category"},
-					{Category: "category"},
+					{Category: "name"},
+					{Category: "name"},
+					{Category: "name"},
 				}
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
@@ -75,9 +76,9 @@ var _ = Describe("FirstByName", func() {
 				repo.QueryMock.Returns.Error = errors.New("find failed")
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`finding records in category "category" failed: find failed`))
+				Expect(err).To(MatchError(`finding categories with name "name" failed: find failed`))
 			})
 		})
 	})
@@ -88,9 +89,9 @@ var _ = Describe("FirstByName", func() {
 			repo.SetQueryStub(nil, nil)
 			service := doubles.NewCategoryService(repo)
 
-			service.First("category")
+			service.First("name")
 
-			Expect(repo.QueryCalledOnceWith("category")).To(BeTrue())
+			Expect(repo.QueryCalledOnceWith("name", "category")).To(BeTrue())
 		})
 
 		Context("when no records are found", func() {
@@ -99,9 +100,9 @@ var _ = Describe("FirstByName", func() {
 				repo.SetQueryStub([]doubles.Record{}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`no records found in category "category"`))
+				Expect(err).To(MatchError(`no categories found with name "name"`))
 			})
 		})
 
@@ -109,14 +110,14 @@ var _ = Describe("FirstByName", func() {
 			It("returns the matching record", func() {
 				repo := new(charlatan.Fakerepository)
 				repo.SetQueryStub([]doubles.Record{
-					{Category: "category"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
@@ -124,16 +125,16 @@ var _ = Describe("FirstByName", func() {
 			It("returns the first matching record", func() {
 				repo := new(charlatan.Fakerepository)
 				repo.SetQueryStub([]doubles.Record{
-					{Category: "category"},
-					{Category: "category"},
-					{Category: "category"},
+					{Category: "name"},
+					{Category: "name"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
@@ -143,9 +144,9 @@ var _ = Describe("FirstByName", func() {
 				repo.SetQueryStub(nil, errors.New("find failed"))
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`finding records in category "category" failed: find failed`))
+				Expect(err).To(MatchError(`finding categories with name "name" failed: find failed`))
 			})
 		})
 	})
@@ -155,10 +156,12 @@ var _ = Describe("FirstByName", func() {
 			repo := new(counterfeiter.FakeRepository)
 			service := doubles.NewCategoryService(repo)
 
-			service.First("category")
+			service.First("name")
 
 			Expect(repo.QueryCallCount()).To(Equal(1))
-			Expect(repo.QueryArgsForCall(0)).To(Equal("category"))
+			name, kind := repo.QueryArgsForCall(0)
+			Expect(name).To(Equal("name"))
+			Expect(kind).To(Equal("category"))
 		})
 
 		Context("when no records are found", func() {
@@ -167,9 +170,9 @@ var _ = Describe("FirstByName", func() {
 				repo.QueryReturns([]doubles.Record{}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`no records found in category "category"`))
+				Expect(err).To(MatchError(`no categories found with name "name"`))
 			})
 		})
 
@@ -177,14 +180,14 @@ var _ = Describe("FirstByName", func() {
 			It("returns the matching record", func() {
 				repo := new(counterfeiter.FakeRepository)
 				repo.QueryReturns([]doubles.Record{
-					{Category: "category"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
@@ -192,16 +195,16 @@ var _ = Describe("FirstByName", func() {
 			It("returns the first matching record", func() {
 				repo := new(counterfeiter.FakeRepository)
 				repo.QueryReturns([]doubles.Record{
-					{Category: "category"},
-					{Category: "category"},
-					{Category: "category"},
+					{Category: "name"},
+					{Category: "name"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
@@ -211,9 +214,9 @@ var _ = Describe("FirstByName", func() {
 				repo.QueryReturns(nil, errors.New("find failed"))
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`finding records in category "category" failed: find failed`))
+				Expect(err).To(MatchError(`finding categories with name "name" failed: find failed`))
 			})
 		})
 	})
@@ -222,10 +225,10 @@ var _ = Describe("FirstByName", func() {
 		It("calls the repository with the category", func() {
 			mc := minimock.NewController(GinkgoT())
 			repo := minimocks.NewrepositoryMock(mc)
-			repo.QueryMock.Expect("category").Return(nil, nil)
+			repo.QueryMock.Expect("name", "category").Return(nil, nil)
 			service := doubles.NewCategoryService(repo)
 
-			service.First("category")
+			service.First("name")
 
 			Expect(repo.QueryCounter).To(Equal(uint64(1)))
 			mc.Finish()
@@ -238,9 +241,9 @@ var _ = Describe("FirstByName", func() {
 				repo.QueryMock.Return([]doubles.Record{}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`no records found in category "category"`))
+				Expect(err).To(MatchError(`no categories found with name "name"`))
 				mc.Finish()
 			})
 		})
@@ -250,14 +253,14 @@ var _ = Describe("FirstByName", func() {
 				mc := minimock.NewController(GinkgoT())
 				repo := minimocks.NewrepositoryMock(mc)
 				repo.QueryMock.Return([]doubles.Record{
-					{Category: "category"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 				mc.Finish()
 			})
 		})
@@ -267,16 +270,16 @@ var _ = Describe("FirstByName", func() {
 				mc := minimock.NewController(GinkgoT())
 				repo := minimocks.NewrepositoryMock(mc)
 				repo.QueryMock.Return([]doubles.Record{
-					{Category: "category"},
-					{Category: "category"},
-					{Category: "category"},
+					{Category: "name"},
+					{Category: "name"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 				mc.Finish()
 			})
 		})
@@ -288,9 +291,9 @@ var _ = Describe("FirstByName", func() {
 				repo.QueryMock.Return(nil, errors.New("find failed"))
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`finding records in category "category" failed: find failed`))
+				Expect(err).To(MatchError(`finding categories with name "name" failed: find failed`))
 				mc.Finish()
 			})
 		})
@@ -301,64 +304,64 @@ var _ = Describe("FirstByName", func() {
 			repo := pegomock.NewMockrepository()
 			service := doubles.NewCategoryService(repo)
 
-			service.First("category")
+			service.First("name")
 
-			repo.VerifyWasCalledOnce().Query("category")
+			repo.VerifyWasCalledOnce().Query("name", "category")
 		})
 
 		Context("when no records are found", func() {
 			It("returns an error", func() {
 				repo := pegomock.NewMockrepository()
-				When(repo.Query(AnyString())).ThenReturn([]doubles.Record{}, nil)
+				When(repo.Query(AnyString(), AnyString())).ThenReturn([]doubles.Record{}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`no records found in category "category"`))
+				Expect(err).To(MatchError(`no categories found with name "name"`))
 			})
 		})
 
 		Context("when one matching record is found", func() {
 			It("returns the matching record", func() {
 				repo := pegomock.NewMockrepository()
-				When(repo.Query(AnyString())).ThenReturn([]doubles.Record{
-					{Category: "category"},
+				When(repo.Query(AnyString(), AnyString())).ThenReturn([]doubles.Record{
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
 		Context("when several records are found", func() {
 			It("returns the first matching record", func() {
 				repo := pegomock.NewMockrepository()
-				When(repo.Query(AnyString())).ThenReturn([]doubles.Record{
-					{Category: "category"},
-					{Category: "category"},
-					{Category: "category"},
+				When(repo.Query(AnyString(), AnyString())).ThenReturn([]doubles.Record{
+					{Category: "name"},
+					{Category: "name"},
+					{Category: "name"},
 				}, nil)
 				service := doubles.NewCategoryService(repo)
 
-				record, err := service.First("category")
+				record, err := service.First("name")
 
 				Expect(err).NotTo(HaveOccurred())
-				Expect(record.Category).To(Equal("category"))
+				Expect(record.Category).To(Equal("name"))
 			})
 		})
 
 		Context("when finding records fails", func() {
 			It("returns an error", func() {
 				repo := pegomock.NewMockrepository()
-				When(repo.Query(AnyString())).ThenReturn(nil, errors.New("find failed"))
+				When(repo.Query(AnyString(), AnyString())).ThenReturn(nil, errors.New("find failed"))
 				service := doubles.NewCategoryService(repo)
 
-				_, err := service.First("category")
+				_, err := service.First("name")
 
-				Expect(err).To(MatchError(`finding records in category "category" failed: find failed`))
+				Expect(err).To(MatchError(`finding categories with name "name" failed: find failed`))
 			})
 		})
 	})

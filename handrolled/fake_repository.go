@@ -6,7 +6,8 @@ type FakeRepository struct {
 	QueryMock struct {
 		CallCount int
 		Received  struct {
-			Category string
+			Name string
+			Kind string
 		}
 		Returns struct {
 			Records []doubles.Record
@@ -15,9 +16,10 @@ type FakeRepository struct {
 	}
 }
 
-func (f *FakeRepository) Query(category string) ([]doubles.Record, error) {
+func (f *FakeRepository) Query(name, kind string) ([]doubles.Record, error) {
 	f.QueryMock.CallCount++
-	f.QueryMock.Received.Category = category
+	f.QueryMock.Received.Name = name
+	f.QueryMock.Received.Kind = kind
 
 	return f.QueryMock.Returns.Records, f.QueryMock.Returns.Error
 }

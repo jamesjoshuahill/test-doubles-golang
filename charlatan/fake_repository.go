@@ -11,21 +11,21 @@ import (
 // repositoryQueryInvocation represents a single call of Fakerepository.Query
 type repositoryQueryInvocation struct {
 	Parameters struct {
-		Category string
+		Name string
+		Kind string
 	}
 	Results struct {
-		Ident1 []doubles.
-			Record
+		Ident1 []doubles.Record
 		Ident2 error
 	}
 }
 
 // NewrepositoryQueryInvocation creates a new instance of repositoryQueryInvocation
-func NewrepositoryQueryInvocation(category string, ident1 []doubles.
-	Record, ident2 error) *repositoryQueryInvocation {
+func NewrepositoryQueryInvocation(name string, kind string, ident1 []doubles.Record, ident2 error) *repositoryQueryInvocation {
 	invocation := new(repositoryQueryInvocation)
 
-	invocation.Parameters.Category = category
+	invocation.Parameters.Name = name
+	invocation.Parameters.Kind = kind
 
 	invocation.Results.Ident1 = ident1
 	invocation.Results.Ident2 = ident2
@@ -49,8 +49,7 @@ Use it in your tests as in this example:
 
 	func TestWithrepository(t *testing.T) {
 		f := &charlatan.Fakerepository{
-			QueryHook: func(category string) (ident1 []doubles.
-Record, ident2 error) {
+			QueryHook: func(name string, kind string) (ident1 []doubles.Record, ident2 error) {
 				// ensure parameters meet expectations, signal errors using t, etc
 				return
 			},
@@ -67,8 +66,7 @@ should be called in the code under test.  This will force a panic if any
 unexpected calls are made to FakeQuery.
 */
 type Fakerepository struct {
-	QueryHook func(string) ([]doubles.
-			Record, error)
+	QueryHook func(string, string) ([]doubles.Record, error)
 
 	QueryCalls []*repositoryQueryInvocation
 }
@@ -76,8 +74,7 @@ type Fakerepository struct {
 // NewFakerepositoryDefaultPanic returns an instance of Fakerepository with all hooks configured to panic
 func NewFakerepositoryDefaultPanic() *Fakerepository {
 	return &Fakerepository{
-		QueryHook: func(string) (ident1 []doubles.
-			Record, ident2 error) {
+		QueryHook: func(string, string) (ident1 []doubles.Record, ident2 error) {
 			panic("Unexpected call to repository.Query")
 		},
 	}
@@ -86,8 +83,7 @@ func NewFakerepositoryDefaultPanic() *Fakerepository {
 // NewFakerepositoryDefaultFatal returns an instance of Fakerepository with all hooks configured to call t.Fatal
 func NewFakerepositoryDefaultFatal(t_sym1 repositoryTestingT) *Fakerepository {
 	return &Fakerepository{
-		QueryHook: func(string) (ident1 []doubles.
-			Record, ident2 error) {
+		QueryHook: func(string, string) (ident1 []doubles.Record, ident2 error) {
 			t_sym1.Fatal("Unexpected call to repository.Query")
 			return
 		},
@@ -97,8 +93,7 @@ func NewFakerepositoryDefaultFatal(t_sym1 repositoryTestingT) *Fakerepository {
 // NewFakerepositoryDefaultError returns an instance of Fakerepository with all hooks configured to call t.Error
 func NewFakerepositoryDefaultError(t_sym2 repositoryTestingT) *Fakerepository {
 	return &Fakerepository{
-		QueryHook: func(string) (ident1 []doubles.
-			Record, ident2 error) {
+		QueryHook: func(string, string) (ident1 []doubles.Record, ident2 error) {
 			t_sym2.Error("Unexpected call to repository.Query")
 			return
 		},
@@ -109,8 +104,7 @@ func (f *Fakerepository) Reset() {
 	f.QueryCalls = []*repositoryQueryInvocation{}
 }
 
-func (f_sym3 *Fakerepository) Query(category string) (ident1 []doubles.
-	Record, ident2 error) {
+func (f_sym3 *Fakerepository) Query(name string, kind string) (ident1 []doubles.Record, ident2 error) {
 	if f_sym3.QueryHook == nil {
 		panic("repository.Query() called but Fakerepository.QueryHook is nil")
 	}
@@ -118,9 +112,10 @@ func (f_sym3 *Fakerepository) Query(category string) (ident1 []doubles.
 	invocation_sym3 := new(repositoryQueryInvocation)
 	f_sym3.QueryCalls = append(f_sym3.QueryCalls, invocation_sym3)
 
-	invocation_sym3.Parameters.Category = category
+	invocation_sym3.Parameters.Name = name
+	invocation_sym3.Parameters.Kind = kind
 
-	ident1, ident2 = f_sym3.QueryHook(category)
+	ident1, ident2 = f_sym3.QueryHook(name, kind)
 
 	invocation_sym3.Results.Ident1 = ident1
 	invocation_sym3.Results.Ident2 = ident2
@@ -129,22 +124,18 @@ func (f_sym3 *Fakerepository) Query(category string) (ident1 []doubles.
 }
 
 // SetQueryStub configures repository.Query to always return the given values
-func (f_sym4 *Fakerepository) SetQueryStub(ident1 []doubles.
-	Record, ident2 error) {
-	f_sym4.QueryHook = func(string) ([]doubles.
-		Record, error) {
+func (f_sym4 *Fakerepository) SetQueryStub(ident1 []doubles.Record, ident2 error) {
+	f_sym4.QueryHook = func(string, string) ([]doubles.Record, error) {
 		return ident1, ident2
 	}
 }
 
 // SetQueryInvocation configures repository.Query to return the given results when called with the given parameters
 // If no match is found for an invocation the result(s) of the fallback function are returned
-func (f_sym5 *Fakerepository) SetQueryInvocation(calls_sym5 []*repositoryQueryInvocation, fallback_sym5 func() ([]doubles.
-	Record, error)) {
-	f_sym5.QueryHook = func(category string) (ident1 []doubles.
-		Record, ident2 error) {
+func (f_sym5 *Fakerepository) SetQueryInvocation(calls_sym5 []*repositoryQueryInvocation, fallback_sym5 func() ([]doubles.Record, error)) {
+	f_sym5.QueryHook = func(name string, kind string) (ident1 []doubles.Record, ident2 error) {
 		for _, call_sym5 := range calls_sym5 {
-			if reflect.DeepEqual(call_sym5.Parameters.Category, category) {
+			if reflect.DeepEqual(call_sym5.Parameters.Name, name) && reflect.DeepEqual(call_sym5.Parameters.Kind, kind) {
 				ident1 = call_sym5.Results.Ident1
 				ident2 = call_sym5.Results.Ident2
 
@@ -209,9 +200,9 @@ func (f *Fakerepository) AssertQueryCalledN(t repositoryTestingT, n int) {
 }
 
 // QueryCalledWith returns true if Fakerepository.Query was called with the given values
-func (f_sym6 *Fakerepository) QueryCalledWith(category string) bool {
+func (f_sym6 *Fakerepository) QueryCalledWith(name string, kind string) bool {
 	for _, call_sym6 := range f_sym6.QueryCalls {
-		if reflect.DeepEqual(call_sym6.Parameters.Category, category) {
+		if reflect.DeepEqual(call_sym6.Parameters.Name, name) && reflect.DeepEqual(call_sym6.Parameters.Kind, kind) {
 			return true
 		}
 	}
@@ -220,11 +211,11 @@ func (f_sym6 *Fakerepository) QueryCalledWith(category string) bool {
 }
 
 // AssertQueryCalledWith calls t.Error if Fakerepository.Query was not called with the given values
-func (f_sym7 *Fakerepository) AssertQueryCalledWith(t repositoryTestingT, category string) {
+func (f_sym7 *Fakerepository) AssertQueryCalledWith(t repositoryTestingT, name string, kind string) {
 	t.Helper()
 	var found_sym7 bool
 	for _, call_sym7 := range f_sym7.QueryCalls {
-		if reflect.DeepEqual(call_sym7.Parameters.Category, category) {
+		if reflect.DeepEqual(call_sym7.Parameters.Name, name) && reflect.DeepEqual(call_sym7.Parameters.Kind, kind) {
 			found_sym7 = true
 			break
 		}
@@ -236,10 +227,10 @@ func (f_sym7 *Fakerepository) AssertQueryCalledWith(t repositoryTestingT, catego
 }
 
 // QueryCalledOnceWith returns true if Fakerepository.Query was called exactly once with the given values
-func (f_sym8 *Fakerepository) QueryCalledOnceWith(category string) bool {
+func (f_sym8 *Fakerepository) QueryCalledOnceWith(name string, kind string) bool {
 	var count_sym8 int
 	for _, call_sym8 := range f_sym8.QueryCalls {
-		if reflect.DeepEqual(call_sym8.Parameters.Category, category) {
+		if reflect.DeepEqual(call_sym8.Parameters.Name, name) && reflect.DeepEqual(call_sym8.Parameters.Kind, kind) {
 			count_sym8++
 		}
 	}
@@ -248,11 +239,11 @@ func (f_sym8 *Fakerepository) QueryCalledOnceWith(category string) bool {
 }
 
 // AssertQueryCalledOnceWith calls t.Error if Fakerepository.Query was not called exactly once with the given values
-func (f_sym9 *Fakerepository) AssertQueryCalledOnceWith(t repositoryTestingT, category string) {
+func (f_sym9 *Fakerepository) AssertQueryCalledOnceWith(t repositoryTestingT, name string, kind string) {
 	t.Helper()
 	var count_sym9 int
 	for _, call_sym9 := range f_sym9.QueryCalls {
-		if reflect.DeepEqual(call_sym9.Parameters.Category, category) {
+		if reflect.DeepEqual(call_sym9.Parameters.Name, name) && reflect.DeepEqual(call_sym9.Parameters.Kind, kind) {
 			count_sym9++
 		}
 	}
@@ -263,10 +254,9 @@ func (f_sym9 *Fakerepository) AssertQueryCalledOnceWith(t repositoryTestingT, ca
 }
 
 // QueryResultsForCall returns the result values for the first call to Fakerepository.Query with the given values
-func (f_sym10 *Fakerepository) QueryResultsForCall(category string) (ident1 []doubles.
-	Record, ident2 error, found_sym10 bool) {
+func (f_sym10 *Fakerepository) QueryResultsForCall(name string, kind string) (ident1 []doubles.Record, ident2 error, found_sym10 bool) {
 	for _, call_sym10 := range f_sym10.QueryCalls {
-		if reflect.DeepEqual(call_sym10.Parameters.Category, category) {
+		if reflect.DeepEqual(call_sym10.Parameters.Name, name) && reflect.DeepEqual(call_sym10.Parameters.Kind, kind) {
 			ident1 = call_sym10.Results.Ident1
 			ident2 = call_sym10.Results.Ident2
 			found_sym10 = true

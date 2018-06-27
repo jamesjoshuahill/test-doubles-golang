@@ -19,7 +19,7 @@ import (
 type repositoryMock struct {
 	t minimock.Tester
 
-	QueryFunc       func(p string) (r []doubles.Record, r1 error)
+	QueryFunc       func(p string, p1 string) (r []doubles.Record, r1 error)
 	QueryCounter    uint64
 	QueryPreCounter uint64
 	QueryMock       mrepositoryMockQuery
@@ -45,36 +45,37 @@ type mrepositoryMockQuery struct {
 
 //repositoryMockQueryParams represents input parameters of the repository.Query
 type repositoryMockQueryParams struct {
-	p string
+	p  string
+	p1 string
 }
 
 //Expect sets up expected params for the repository.Query
-func (m *mrepositoryMockQuery) Expect(p string) *mrepositoryMockQuery {
-	m.mockExpectations = &repositoryMockQueryParams{p}
+func (m *mrepositoryMockQuery) Expect(p string, p1 string) *mrepositoryMockQuery {
+	m.mockExpectations = &repositoryMockQueryParams{p, p1}
 	return m
 }
 
 //Return sets up a mock for repository.Query to return Return's arguments
 func (m *mrepositoryMockQuery) Return(r []doubles.Record, r1 error) *repositoryMock {
-	m.mock.QueryFunc = func(p string) ([]doubles.Record, error) {
+	m.mock.QueryFunc = func(p string, p1 string) ([]doubles.Record, error) {
 		return r, r1
 	}
 	return m.mock
 }
 
 //Set uses given function f as a mock of repository.Query method
-func (m *mrepositoryMockQuery) Set(f func(p string) (r []doubles.Record, r1 error)) *repositoryMock {
+func (m *mrepositoryMockQuery) Set(f func(p string, p1 string) (r []doubles.Record, r1 error)) *repositoryMock {
 	m.mock.QueryFunc = f
 	return m.mock
 }
 
 //Query implements github.com/jamesjoshuahill/test-doubles-golang.repository interface
-func (m *repositoryMock) Query(p string) (r []doubles.Record, r1 error) {
+func (m *repositoryMock) Query(p string, p1 string) (r []doubles.Record, r1 error) {
 	atomic.AddUint64(&m.QueryPreCounter, 1)
 	defer atomic.AddUint64(&m.QueryCounter, 1)
 
 	if m.QueryMock.mockExpectations != nil {
-		testify_assert.Equal(m.t, *m.QueryMock.mockExpectations, repositoryMockQueryParams{p},
+		testify_assert.Equal(m.t, *m.QueryMock.mockExpectations, repositoryMockQueryParams{p, p1},
 			"repository.Query got unexpected parameters")
 
 		if m.QueryFunc == nil {
@@ -90,7 +91,7 @@ func (m *repositoryMock) Query(p string) (r []doubles.Record, r1 error) {
 		return
 	}
 
-	return m.QueryFunc(p)
+	return m.QueryFunc(p, p1)
 }
 
 //QueryMinimockCounter returns a count of repositoryMock.QueryFunc invocations

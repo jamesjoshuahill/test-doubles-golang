@@ -17,11 +17,11 @@ func NewMockrepository() *Mockrepository {
 	return &Mockrepository{fail: pegomock.GlobalFailHandler}
 }
 
-func (mock *Mockrepository) Query(category string) ([]test_doubles_golang.Record, error) {
+func (mock *Mockrepository) Query(name string, kind string) ([]test_doubles_golang.Record, error) {
 	if mock == nil {
 		panic("mock must not be nil. Use myMock := NewMockMockrepository().")
 	}
-	params := []pegomock.Param{category}
+	params := []pegomock.Param{name, kind}
 	result := pegomock.GetGenericMockFrom(mock).Invoke("Query", params, []reflect.Type{reflect.TypeOf((*[]test_doubles_golang.Record)(nil)).Elem(), reflect.TypeOf((*error)(nil)).Elem()})
 	var ret0 []test_doubles_golang.Record
 	var ret1 error
@@ -54,8 +54,8 @@ type Verifierrepository struct {
 	inOrderContext         *pegomock.InOrderContext
 }
 
-func (verifier *Verifierrepository) Query(category string) *repository_Query_OngoingVerification {
-	params := []pegomock.Param{category}
+func (verifier *Verifierrepository) Query(name string, kind string) *repository_Query_OngoingVerification {
+	params := []pegomock.Param{name, kind}
 	methodInvocations := pegomock.GetGenericMockFrom(verifier.mock).Verify(verifier.inOrderContext, verifier.invocationCountMatcher, "Query", params)
 	return &repository_Query_OngoingVerification{mock: verifier.mock, methodInvocations: methodInvocations}
 }
@@ -65,17 +65,21 @@ type repository_Query_OngoingVerification struct {
 	methodInvocations []pegomock.MethodInvocation
 }
 
-func (c *repository_Query_OngoingVerification) GetCapturedArguments() string {
-	category := c.GetAllCapturedArguments()
-	return category[len(category)-1]
+func (c *repository_Query_OngoingVerification) GetCapturedArguments() (string, string) {
+	name, kind := c.GetAllCapturedArguments()
+	return name[len(name)-1], kind[len(kind)-1]
 }
 
-func (c *repository_Query_OngoingVerification) GetAllCapturedArguments() (_param0 []string) {
+func (c *repository_Query_OngoingVerification) GetAllCapturedArguments() (_param0 []string, _param1 []string) {
 	params := pegomock.GetGenericMockFrom(c.mock).GetInvocationParams(c.methodInvocations)
 	if len(params) > 0 {
 		_param0 = make([]string, len(params[0]))
 		for u, param := range params[0] {
 			_param0[u] = param.(string)
+		}
+		_param1 = make([]string, len(params[1]))
+		for u, param := range params[1] {
+			_param1[u] = param.(string)
 		}
 	}
 	return

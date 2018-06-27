@@ -9,7 +9,7 @@ import (
 //go:generate minimock -i github.com/jamesjoshuahill/test-doubles-golang.repository -o minimocks -s _mock.go
 //go:generate pegomock generate --use-experimental-model-gen -o pegomock/mock_repository.go --package pegomock repository
 type repository interface {
-	Query(category string) ([]Record, error)
+	Query(name, kind string) ([]Record, error)
 }
 
 type Record struct {
@@ -26,14 +26,14 @@ func NewCategoryService(r repository) *CategoryService {
 	}
 }
 
-func (s CategoryService) First(category string) (Record, error) {
-	records, err := s.repository.Query(category)
+func (s CategoryService) First(name string) (Record, error) {
+	records, err := s.repository.Query(name, "category")
 	if err != nil {
-		return Record{}, fmt.Errorf("finding records in category %q failed: %s", category, err)
+		return Record{}, fmt.Errorf("finding categories with name %q failed: %s", name, err)
 	}
 
 	if len(records) == 0 {
-		return Record{}, fmt.Errorf("no records found in category %q", category)
+		return Record{}, fmt.Errorf("no categories found with name %q", name)
 	}
 
 	return records[0], nil
