@@ -8,7 +8,6 @@ import (
 	"github.com/jamesjoshuahill/test-doubles-golang/handrolled"
 	"github.com/jamesjoshuahill/test-doubles-golang/minimocks"
 	"github.com/jamesjoshuahill/test-doubles-golang/pegomock"
-	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
