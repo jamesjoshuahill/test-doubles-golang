@@ -17,11 +17,11 @@ func NewMockrepository() *Mockrepository {
 	return &Mockrepository{fail: pegomock.GlobalFailHandler}
 }
 
-func (mock *Mockrepository) Query(name string, kind string) ([]test_doubles_golang.Record, error) {
+func (mock *Mockrepository) Query(name string, category string) ([]test_doubles_golang.Record, error) {
 	if mock == nil {
 		panic("mock must not be nil. Use myMock := NewMockMockrepository().")
 	}
-	params := []pegomock.Param{name, kind}
+	params := []pegomock.Param{name, category}
 	result := pegomock.GetGenericMockFrom(mock).Invoke("Query", params, []reflect.Type{reflect.TypeOf((*[]test_doubles_golang.Record)(nil)).Elem(), reflect.TypeOf((*error)(nil)).Elem()})
 	var ret0 []test_doubles_golang.Record
 	var ret1 error
@@ -54,8 +54,8 @@ type Verifierrepository struct {
 	inOrderContext         *pegomock.InOrderContext
 }
 
-func (verifier *Verifierrepository) Query(name string, kind string) *repository_Query_OngoingVerification {
-	params := []pegomock.Param{name, kind}
+func (verifier *Verifierrepository) Query(name string, category string) *repository_Query_OngoingVerification {
+	params := []pegomock.Param{name, category}
 	methodInvocations := pegomock.GetGenericMockFrom(verifier.mock).Verify(verifier.inOrderContext, verifier.invocationCountMatcher, "Query", params)
 	return &repository_Query_OngoingVerification{mock: verifier.mock, methodInvocations: methodInvocations}
 }
@@ -66,8 +66,8 @@ type repository_Query_OngoingVerification struct {
 }
 
 func (c *repository_Query_OngoingVerification) GetCapturedArguments() (string, string) {
-	name, kind := c.GetAllCapturedArguments()
-	return name[len(name)-1], kind[len(kind)-1]
+	name, category := c.GetAllCapturedArguments()
+	return name[len(name)-1], category[len(category)-1]
 }
 
 func (c *repository_Query_OngoingVerification) GetAllCapturedArguments() (_param0 []string, _param1 []string) {

@@ -8,11 +8,11 @@ import (
 )
 
 type FakeRepository struct {
-	QueryStub        func(name, kind string) ([]doubles.Record, error)
+	QueryStub        func(name, category string) ([]doubles.Record, error)
 	queryMutex       sync.RWMutex
 	queryArgsForCall []struct {
-		name string
-		kind string
+		name     string
+		category string
 	}
 	queryReturns struct {
 		result1 []doubles.Record
@@ -26,17 +26,17 @@ type FakeRepository struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeRepository) Query(name string, kind string) ([]doubles.Record, error) {
+func (fake *FakeRepository) Query(name string, category string) ([]doubles.Record, error) {
 	fake.queryMutex.Lock()
 	ret, specificReturn := fake.queryReturnsOnCall[len(fake.queryArgsForCall)]
 	fake.queryArgsForCall = append(fake.queryArgsForCall, struct {
-		name string
-		kind string
-	}{name, kind})
-	fake.recordInvocation("Query", []interface{}{name, kind})
+		name     string
+		category string
+	}{name, category})
+	fake.recordInvocation("Query", []interface{}{name, category})
 	fake.queryMutex.Unlock()
 	if fake.QueryStub != nil {
-		return fake.QueryStub(name, kind)
+		return fake.QueryStub(name, category)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -53,7 +53,7 @@ func (fake *FakeRepository) QueryCallCount() int {
 func (fake *FakeRepository) QueryArgsForCall(i int) (string, string) {
 	fake.queryMutex.RLock()
 	defer fake.queryMutex.RUnlock()
-	return fake.queryArgsForCall[i].name, fake.queryArgsForCall[i].kind
+	return fake.queryArgsForCall[i].name, fake.queryArgsForCall[i].category
 }
 
 func (fake *FakeRepository) QueryReturns(result1 []doubles.Record, result2 error) {
