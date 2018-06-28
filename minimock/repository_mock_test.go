@@ -1,31 +1,29 @@
-package minimocks
+package minimock
 
 /*
 DO NOT EDIT!
 This code was generated automatically using github.com/gojuno/minimock v1.9
-The original interface "repository" can be found in github.com/jamesjoshuahill/test-doubles-golang
+The original interface "repository" can be found in github.com/jamesjoshuahill/test-doubles-golang/minimock
 */
 import (
 	"sync/atomic"
 	"time"
 
 	"github.com/gojuno/minimock"
-	doubles "github.com/jamesjoshuahill/test-doubles-golang"
-
 	testify_assert "github.com/stretchr/testify/assert"
 )
 
-//repositoryMock implements github.com/jamesjoshuahill/test-doubles-golang.repository
+//repositoryMock implements github.com/jamesjoshuahill/test-doubles-golang/minimock.repository
 type repositoryMock struct {
 	t minimock.Tester
 
-	QueryFunc       func(p string, p1 string) (r []doubles.Record, r1 error)
+	QueryFunc       func(p string, p1 string) (r []Record, r1 error)
 	QueryCounter    uint64
 	QueryPreCounter uint64
 	QueryMock       mrepositoryMockQuery
 }
 
-//NewrepositoryMock returns a mock for github.com/jamesjoshuahill/test-doubles-golang.repository
+//NewrepositoryMock returns a mock for github.com/jamesjoshuahill/test-doubles-golang/minimock.repository
 func NewrepositoryMock(t minimock.Tester) *repositoryMock {
 	m := &repositoryMock{t: t}
 
@@ -56,21 +54,21 @@ func (m *mrepositoryMockQuery) Expect(p string, p1 string) *mrepositoryMockQuery
 }
 
 //Return sets up a mock for repository.Query to return Return's arguments
-func (m *mrepositoryMockQuery) Return(r []doubles.Record, r1 error) *repositoryMock {
-	m.mock.QueryFunc = func(p string, p1 string) ([]doubles.Record, error) {
+func (m *mrepositoryMockQuery) Return(r []Record, r1 error) *repositoryMock {
+	m.mock.QueryFunc = func(p string, p1 string) ([]Record, error) {
 		return r, r1
 	}
 	return m.mock
 }
 
 //Set uses given function f as a mock of repository.Query method
-func (m *mrepositoryMockQuery) Set(f func(p string, p1 string) (r []doubles.Record, r1 error)) *repositoryMock {
+func (m *mrepositoryMockQuery) Set(f func(p string, p1 string) (r []Record, r1 error)) *repositoryMock {
 	m.mock.QueryFunc = f
 	return m.mock
 }
 
-//Query implements github.com/jamesjoshuahill/test-doubles-golang.repository interface
-func (m *repositoryMock) Query(p string, p1 string) (r []doubles.Record, r1 error) {
+//Query implements github.com/jamesjoshuahill/test-doubles-golang/minimock.repository interface
+func (m *repositoryMock) Query(p string, p1 string) (r []Record, r1 error) {
 	atomic.AddUint64(&m.QueryPreCounter, 1)
 	defer atomic.AddUint64(&m.QueryCounter, 1)
 

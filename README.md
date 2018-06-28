@@ -15,7 +15,7 @@ $ cd $GOPATH/src/github.com/jamesjoshuahill/test-doubles-golang
 $ brew install dep
 $ dep ensure
 $ go get github.com/onsi/ginkgo/ginkgo
-$ ginkgo -randomizeAllSpecs -cover
+$ ginkgo -r
 ```
 
 ## Generate
@@ -30,6 +30,5 @@ $ go get github.com/maxbrunsfeld/counterfeiter
 $ go get github.com/percolate/charlatan
 $ go get github.com/petergtz/pegomock/pegomock
 $ go get github.com/gojuno/minimock/cmd/minimock
-$ mkdir -p minimocks/
 $ go generate ./...
 ```

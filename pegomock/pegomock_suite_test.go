@@ -1,4 +1,4 @@
-package doubles_test
+package pegomock_test
 
 import (
 	"testing"
@@ -12,11 +12,10 @@ var (
 	Describe = ginkgo.Describe
 	Context  = ginkgo.Context
 	It       = ginkgo.It
-	GinkgoT  = ginkgo.GinkgoT
 )
 
-func TestTestDoublesGolang(t *testing.T) {
+func TestPegomock(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
 	pegomock.RegisterMockFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "Doubles Suite")
+	ginkgo.RunSpecs(t, "Pegomock Suite")
 }

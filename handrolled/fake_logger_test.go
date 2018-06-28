@@ -1,4 +1,4 @@
-package handrolled
+package handrolled_test
 
 type FakeLogger struct {
 	InfoCallCount int

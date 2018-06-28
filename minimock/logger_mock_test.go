@@ -1,9 +1,9 @@
-package minimocks
+package minimock
 
 /*
 DO NOT EDIT!
 This code was generated automatically using github.com/gojuno/minimock v1.9
-The original interface "logger" can be found in github.com/jamesjoshuahill/test-doubles-golang
+The original interface "logger" can be found in github.com/jamesjoshuahill/test-doubles-golang/minimock
 */
 import (
 	"sync/atomic"
@@ -13,7 +13,7 @@ import (
 	testify_assert "github.com/stretchr/testify/assert"
 )
 
-//loggerMock implements github.com/jamesjoshuahill/test-doubles-golang.logger
+//loggerMock implements github.com/jamesjoshuahill/test-doubles-golang/minimock.logger
 type loggerMock struct {
 	t minimock.Tester
 
@@ -23,7 +23,7 @@ type loggerMock struct {
 	InfoMock       mloggerMockInfo
 }
 
-//NewloggerMock returns a mock for github.com/jamesjoshuahill/test-doubles-golang.logger
+//NewloggerMock returns a mock for github.com/jamesjoshuahill/test-doubles-golang/minimock.logger
 func NewloggerMock(t minimock.Tester) *loggerMock {
 	m := &loggerMock{t: t}
 
@@ -66,7 +66,7 @@ func (m *mloggerMockInfo) Set(f func(p string)) *loggerMock {
 	return m.mock
 }
 
-//Info implements github.com/jamesjoshuahill/test-doubles-golang.logger interface
+//Info implements github.com/jamesjoshuahill/test-doubles-golang/minimock.logger interface
 func (m *loggerMock) Info(p string) {
 	atomic.AddUint64(&m.InfoPreCounter, 1)
 	defer atomic.AddUint64(&m.InfoCounter, 1)

@@ -1,13 +1,8 @@
-package doubles
+package pegomock
 
-import (
-	"fmt"
-)
+import "fmt"
 
-//go:generate charlatan -output charlatan/fake_repository.go -package charlatan repository
-//go:generate counterfeiter -o counterfeiter/fake_repository.go . repository
-//go:generate minimock -i github.com/jamesjoshuahill/test-doubles-golang.repository -o minimocks -s _mock.go
-//go:generate pegomock generate --use-experimental-model-gen -o pegomock/mock_repository.go --package pegomock repository
+//go:generate pegomock generate --use-experimental-model-gen repository
 type repository interface {
 	Query(name, category string) ([]Record, error)
 }
