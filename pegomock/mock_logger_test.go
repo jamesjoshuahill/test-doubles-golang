@@ -18,7 +18,7 @@ func NewMocklogger() *Mocklogger {
 
 func (mock *Mocklogger) Info(msg string) {
 	if mock == nil {
-		panic("mock must not be nil. Use myMock := NewMockMocklogger().")
+		panic("mock must not be nil. Use myMock := NewMocklogger().")
 	}
 	params := []pegomock.Param{msg}
 	pegomock.GetGenericMockFrom(mock).Invoke("Info", params, []reflect.Type{})

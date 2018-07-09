@@ -6,8 +6,8 @@ package pegomock_test
 import (
 	"reflect"
 
-	pegomock "github.com/jamesjoshuahill/test-doubles-golang/pegomock"
-	pegomock0 "github.com/petergtz/pegomock"
+	pegomock0 "github.com/jamesjoshuahill/test-doubles-golang/pegomock"
+	pegomock "github.com/petergtz/pegomock"
 )
 
 type Mockrepository struct {
@@ -15,20 +15,20 @@ type Mockrepository struct {
 }
 
 func NewMockrepository() *Mockrepository {
-	return &Mockrepository{fail: pegomock0.GlobalFailHandler}
+	return &Mockrepository{fail: pegomock.GlobalFailHandler}
 }
 
-func (mock *Mockrepository) Query(name string, category string) ([]pegomock.Record, error) {
+func (mock *Mockrepository) Query(name string, category string) ([]pegomock0.Record, error) {
 	if mock == nil {
-		panic("mock must not be nil. Use myMock := NewMockMockrepository().")
+		panic("mock must not be nil. Use myMock := NewMockrepository().")
 	}
-	params := []pegomock0.Param{name, category}
-	result := pegomock0.GetGenericMockFrom(mock).Invoke("Query", params, []reflect.Type{reflect.TypeOf((*[]pegomock.Record)(nil)).Elem(), reflect.TypeOf((*error)(nil)).Elem()})
-	var ret0 []pegomock.Record
+	params := []pegomock.Param{name, category}
+	result := pegomock.GetGenericMockFrom(mock).Invoke("Query", params, []reflect.Type{reflect.TypeOf((*[]pegomock0.Record)(nil)).Elem(), reflect.TypeOf((*error)(nil)).Elem()})
+	var ret0 []pegomock0.Record
 	var ret1 error
 	if len(result) != 0 {
 		if result[0] != nil {
-			ret0 = result[0].([]pegomock.Record)
+			ret0 = result[0].([]pegomock0.Record)
 		}
 		if result[1] != nil {
 			ret1 = result[1].(error)
@@ -38,32 +38,32 @@ func (mock *Mockrepository) Query(name string, category string) ([]pegomock.Reco
 }
 
 func (mock *Mockrepository) VerifyWasCalledOnce() *Verifierrepository {
-	return &Verifierrepository{mock, pegomock0.Times(1), nil}
+	return &Verifierrepository{mock, pegomock.Times(1), nil}
 }
 
-func (mock *Mockrepository) VerifyWasCalled(invocationCountMatcher pegomock0.Matcher) *Verifierrepository {
+func (mock *Mockrepository) VerifyWasCalled(invocationCountMatcher pegomock.Matcher) *Verifierrepository {
 	return &Verifierrepository{mock, invocationCountMatcher, nil}
 }
 
-func (mock *Mockrepository) VerifyWasCalledInOrder(invocationCountMatcher pegomock0.Matcher, inOrderContext *pegomock0.InOrderContext) *Verifierrepository {
+func (mock *Mockrepository) VerifyWasCalledInOrder(invocationCountMatcher pegomock.Matcher, inOrderContext *pegomock.InOrderContext) *Verifierrepository {
 	return &Verifierrepository{mock, invocationCountMatcher, inOrderContext}
 }
 
 type Verifierrepository struct {
 	mock                   *Mockrepository
-	invocationCountMatcher pegomock0.Matcher
-	inOrderContext         *pegomock0.InOrderContext
+	invocationCountMatcher pegomock.Matcher
+	inOrderContext         *pegomock.InOrderContext
 }
 
 func (verifier *Verifierrepository) Query(name string, category string) *repository_Query_OngoingVerification {
-	params := []pegomock0.Param{name, category}
-	methodInvocations := pegomock0.GetGenericMockFrom(verifier.mock).Verify(verifier.inOrderContext, verifier.invocationCountMatcher, "Query", params)
+	params := []pegomock.Param{name, category}
+	methodInvocations := pegomock.GetGenericMockFrom(verifier.mock).Verify(verifier.inOrderContext, verifier.invocationCountMatcher, "Query", params)
 	return &repository_Query_OngoingVerification{mock: verifier.mock, methodInvocations: methodInvocations}
 }
 
 type repository_Query_OngoingVerification struct {
 	mock              *Mockrepository
-	methodInvocations []pegomock0.MethodInvocation
+	methodInvocations []pegomock.MethodInvocation
 }
 
 func (c *repository_Query_OngoingVerification) GetCapturedArguments() (string, string) {
@@ -72,7 +72,7 @@ func (c *repository_Query_OngoingVerification) GetCapturedArguments() (string, s
 }
 
 func (c *repository_Query_OngoingVerification) GetAllCapturedArguments() (_param0 []string, _param1 []string) {
-	params := pegomock0.GetGenericMockFrom(c.mock).GetInvocationParams(c.methodInvocations)
+	params := pegomock.GetGenericMockFrom(c.mock).GetInvocationParams(c.methodInvocations)
 	if len(params) > 0 {
 		_param0 = make([]string, len(params[0]))
 		for u, param := range params[0] {
