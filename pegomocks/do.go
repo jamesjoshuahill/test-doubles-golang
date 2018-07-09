@@ -1,4 +1,4 @@
-package pegomock
+package pegomocks
 
 //go:generate pegomock generate --use-experimental-model-gen logger
 type logger interface {

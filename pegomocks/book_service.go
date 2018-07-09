@@ -1,4 +1,4 @@
-package pegomock
+package pegomocks
 
 import "fmt"
 

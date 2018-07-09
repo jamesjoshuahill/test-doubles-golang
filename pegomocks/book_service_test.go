@@ -1,4 +1,4 @@
-package pegomock_test
+package pegomocks_test
 
 import (
 	. "github.com/onsi/gomega"
@@ -6,13 +6,13 @@ import (
 
 	"errors"
 
-	"github.com/jamesjoshuahill/test-doubles-golang/pegomock"
+	"github.com/jamesjoshuahill/test-doubles-golang/pegomocks"
 )
 
 var _ = Describe("BookService", func() {
 	It("calls the repository with the name and category", func() {
 		repo := NewMockrepository()
-		service := pegomock.NewBookService(repo)
+		service := pegomocks.NewBookService(repo)
 
 		service.First("name")
 
@@ -22,8 +22,8 @@ var _ = Describe("BookService", func() {
 	Context("when no books are found", func() {
 		It("returns an error", func() {
 			repo := NewMockrepository()
-			When(repo.Query(AnyString(), AnyString())).ThenReturn([]pegomock.Record{}, nil)
-			service := pegomock.NewBookService(repo)
+			When(repo.Query(AnyString(), AnyString())).ThenReturn([]pegomocks.Record{}, nil)
+			service := pegomocks.NewBookService(repo)
 
 			_, err := service.First("name")
 
@@ -34,10 +34,10 @@ var _ = Describe("BookService", func() {
 	Context("when one matching book is found", func() {
 		It("returns the matching book", func() {
 			repo := NewMockrepository()
-			When(repo.Query(AnyString(), AnyString())).ThenReturn([]pegomock.Record{
+			When(repo.Query(AnyString(), AnyString())).ThenReturn([]pegomocks.Record{
 				{Name: "name", Category: "book"},
 			}, nil)
-			service := pegomock.NewBookService(repo)
+			service := pegomocks.NewBookService(repo)
 
 			record, err := service.First("name")
 
@@ -49,12 +49,12 @@ var _ = Describe("BookService", func() {
 	Context("when several books are found", func() {
 		It("returns the first matching book", func() {
 			repo := NewMockrepository()
-			When(repo.Query(AnyString(), AnyString())).ThenReturn([]pegomock.Record{
+			When(repo.Query(AnyString(), AnyString())).ThenReturn([]pegomocks.Record{
 				{Name: "name", Category: "book"},
 				{Name: "another name", Category: "book"},
 				{Name: "the name", Category: "book"},
 			}, nil)
-			service := pegomock.NewBookService(repo)
+			service := pegomocks.NewBookService(repo)
 
 			record, err := service.First("name")
 
@@ -67,7 +67,7 @@ var _ = Describe("BookService", func() {
 		It("returns an error", func() {
 			repo := NewMockrepository()
 			When(repo.Query(AnyString(), AnyString())).ThenReturn(nil, errors.New("find failed"))
-			service := pegomock.NewBookService(repo)
+			service := pegomocks.NewBookService(repo)
 
 			_, err := service.First("name")
 

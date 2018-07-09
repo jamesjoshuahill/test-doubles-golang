@@ -1,4 +1,4 @@
-package pegomock_test
+package pegomocks_test
 
 import (
 	"testing"
@@ -14,8 +14,8 @@ var (
 	It       = ginkgo.It
 )
 
-func TestPegomock(t *testing.T) {
+func TestPegomocks(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
 	pegomock.RegisterMockFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "Pegomock Suite")
+	ginkgo.RunSpecs(t, "Pegomocks Suite")
 }
